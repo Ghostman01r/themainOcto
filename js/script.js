@@ -1,5 +1,77 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    document.addEventListener('DOMContentLoaded', () => the native iOS permission pop-up.
+    *   On an Android phone, it will just start listening for the event.
+5.  **The Magic:** Once permission is granted, the `handleDeviceMotion` function listens to the `devicemotion` event, gets the phone's tilt data, and moves the image accordingly.
+
+### **Crucial Next Step: Testing**
+
+As mentioned, you cannot test this by opening the `index.html` file locally.
+
+1.  **Deploy Your Site:** Upload your entire project folder to a free hosting service like [Netlify](https://www.netlify.com/), [Vercel](https://vercel.com/), or [GitHub Pages](https://pages.github.com/). All of these provide free `https://`.
+2.  **Open on Your Phone:** Navigate to your new `https://your-site-name.netlify.app` URL on your smartphone.
+3.  **Tap the Button:** On the homepage, tap the "Enable Motion" button.
+4.  **Grant Permission:** If you're on an iPhone, a pop-up will appear. Tap "Allow."
+5.  **Tilt Your Phone:** Gently tilt your phone left, right, forward, and back. You should see the center image and background letters move in response, creating that incredible immersive effect {
+
+    // ... (Your existing parallax mouse effect code is here) ...
+
+    // ==========================================================
+    // --- NEW: Gyroscope Parallax Effect for Mobile Devices ---
+    // ==========================================================
+
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent) {
+        // This function will handle the device orientation data
+        const handleOrientation = (event) => {
+            const profilePic = document.querySelector('.profile-pic');
+            if (!profilePic) return;
+
+            // event.beta is the front-to-back tilt (-180 to 180)
+            // event.gamma is the side-to-side tilt (-90 to 90)
+            const beta = event.beta;
+            const gamma = event.gamma;
+
+            // --- Control the intensity of the movement ---
+            const moveIntensity = 15; 
+
+            // Normalize the values to create a subtle movement
+            // We use gamma for x-axis movement and beta for y-axis
+            const x = (gamma / 45) * moveIntensity; // Max tilt of 45 degrees = max movement
+            const y = (beta / 45) * moveIntensity;
+
+            // Apply the transformation to the image
+            profilePic.style.transform = `translate(${-x}px, ${-y}px)`;
+        };
+
+        // --- Logic to request permission and start listening ---
+        const startGyroscope = () => {
+            // Check for the modern, permission-based API (especially for iOS 13+)
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        } else {
+                            console.log('Permission to access device orientation was denied.');
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // Handle older browsers or non-iOS devices that don't need explicit permission
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        };
+
+        // We can add a button for the user to click to activate this,
+        // as some browsers require a user interaction to ask for permission.
+        // For simplicity, let's try to activate it on the first touch.
+        document.body.addEventListener('click', startGyroscope, { once: true });
+    }
+
+    // ... (Your other existing JS code for mobile nav, audio, etc. is here) ...
+});
+
     // --- Gyroscope-based Parallax for Mobile Devices ---
     function handleDeviceMotion(event) {
         const heroContent = document.querySelector('.hero-content');

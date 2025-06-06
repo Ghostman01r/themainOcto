@@ -1,0 +1,609 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+/* --- CSS Variables for Easy Customization --- */
+:root {
+    --bg-color: #28282B;
+    --text-color: #FFFFFF;
+    --accent-color: #00E0FF;
+    --muted-text-color: #888888;
+    --font-main: 'Montserrat', sans-serif;
+}
+
+/* --- General & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden; /* Prevents scrollbars on homepage */
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
+}
+
+/* --- Faded Background Letters --- */
+.bg-text {
+    position: absolute;
+    font-size: 25vw;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.05);
+    z-index: -1;
+    user-select: none;
+    animation: float 15s ease-in-out infinite alternate;
+}
+
+#bg-n { top: 5%; left: 20%; }
+#bg-a { top: 40%; left: 5%; animation-delay: -3s; }
+#bg-t1 { bottom: 5%; right: 5%; animation-delay: -6s; }
+#bg-y { bottom: 30%; left: 15%; animation-delay: -9s; }
+#bg-t2 { top: 50%; right: 20%; visibility: hidden; }
+
+@keyframes float {
+    from { transform: translate(0, 0); }
+    to { transform: translate(20px, 20px); }
+}
+
+/* --- Header & Navigation --- */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+nav ul li a {
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+nav ul li a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-color);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lang-switcher button {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+.lang-switcher button:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Hamburger menu is hidden on desktop by default */
+.hamburger-menu {
+    display: none;
+}
+/* Mobile nav is hidden on desktop by default */
+.mobile-nav {
+    display: none;
+}
+
+
+/* --- Sidebars --- */
+.sidebar-left, .sidebar-right {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+/* --- Neon Glow Effect on Hover --- */
+
+/* 1. Add 'text-shadow' to the transition for a smooth effect */
+.sidebar-left a,
+.bottom-left-icon {
+    /* This makes the glow fade in and out gracefully */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 2. Define the glow on hover */
+.sidebar-left a:hover,
+.bottom-left-icon:hover {
+    /* Make the icon itself brighter */
+    color: var(--accent-color);
+
+    /* Layer multiple shadows for the neon glow effect */
+    text-shadow: 
+        0 0 5px var(--accent-color),  /* Inner glow */
+        0 0 10px var(--accent-color), /* Medium glow */
+        0 0 20px var(--accent-color); /* Outer glow */
+}
+
+.sidebar-left { left: 50px; }
+.sidebar-right { right: 50px; }
+/* --- NEW Styling for Bottom Left Icon --- */
+.bottom-left-icon {
+    position: fixed; /* Fixes it to the viewport */
+    left: 50px;      /* Aligns it horizontally with the sidebar */
+    bottom: 50px;    /* Positions it 50px from the bottom */
+    z-index: 5;      /* Ensures it's on top of other content */
+    font-size: 1.2rem; /* Optional: adjust size if needed */
+}
+
+.page-dots { display: flex; flex-direction: column; gap: 15px; }
+.page-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--muted-text-color);
+}
+.page-dots .dot.active { background-color: var(--accent-color); }
+.scroll-arrows { margin-top: 100px; display: flex; flex-direction: column; gap: 20px; }
+.scroll-arrows i { cursor: pointer; }
+
+/* --- Apply Neon Glow to Main Navigation --- */
+
+/* Add text-shadow to the existing transition for nav links */
+nav ul li a {
+    /* ...your existing styles are here... */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Add text-shadow here */
+}
+
+/* Add the text-shadow to the existing hover state */
+nav ul li a:hover {
+    color: var(--accent-color); /* This is already here */
+    text-shadow: 
+        0 0 5px var(--accent-color),
+        0 0 10px var(--accent-color);
+        /* Note: A slightly more subtle glow for the smaller text looks good */
+}
+
+
+/* --- Apply Neon Glow to Scroll Arrows --- */
+
+.scroll-arrows i {
+    cursor: pointer;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.scroll-arrows i:hover {
+    color: var(--accent-color);
+    text-shadow: 
+        0 0 5px var(--accent-color),
+        0 0 10px var(--accent-color),
+        0 0 20px var(--accent-color);
+}
+
+/* --- Main Hero Content --- */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.hero-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.glow-circle {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--accent-color) 0%, rgba(0, 224, 255, 0) 65%);
+    border-radius: 50%;
+    position: absolute;
+    z-index: 0;
+    filter: blur(20px);
+    animation: pulseGlow 5s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    from { transform: scale(0.95); opacity: 0.8; }
+    to { transform: scale(1.05); opacity: 1; }
+}
+
+.profile-pic {
+    width: 650px;
+    height: auto;
+    position: relative;
+    z-index: 2;
+}
+
+.name-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    font-size: 10rem;
+    font-weight: 700;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120%;
+    user-select: none;
+}
+
+.name-part-1 { padding-right: 1em; }
+.name-part-2 { padding-left: 1.2em; }
+
+.name-caption {
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--muted-text-color);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+.name-caption hr {
+    width: 30px;
+    border: none;
+    border-top: 1px solid var(--muted-text-color);
+}
+
+/* --- Styling for Content Pages (Projects, About, Contact) --- */
+.content-page {
+    padding: 150px 100px 50px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+body.scrollable { overflow-y: auto; }
+
+.content-page h1 {
+    font-size: 3rem;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--muted-text-color);
+    padding-bottom: 10px;
+}
+
+.content-page p, .content-page li {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--muted-text-color);
+}
+
+
+/* ========================================= */
+/*          RESPONSIVE DESIGN (MOBILE)       */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+/* --- Styling for About Page --- */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column layout */
+    gap: 20px; /* Space between images */
+    margin: 40px 0; /* Vertical space around the gallery */
+}
+/* Hide the mobile-only Instagram icon by default */
+.mobile-insta-icon {
+    display: none;
+}
+/* Find this existing rule and add the new class */
+.sidebar-left a:hover,
+.bottom-left-icon:hover,
+.mobile-insta-icon:hover { /* Add this line */
+    color: var(--accent-color);
+    text-shadow: 
+        0 0 5px var(--accent-color),
+        0 0 10px var(--accent-color),
+        0 0 20px var(--accent-color);
+}
+/* Inside @media (max-width: 768px) */
+.image-gallery {
+    /* Changes the layout to a single column on mobile */
+    grid-template-columns: 1fr; 
+}
+/* Inside @media (max-width: 768px) */
+
+/* Show and style the mobile-only Instagram icon */
+.mobile-insta-icon {
+    display: block; /* Make it visible */
+    position: fixed; /* Fix it to the screen */
+    bottom: 40px;    /* Position from the bottom */
+    right: 25px;     /* Position from the right */
+    font-size: 1.8rem;
+    color: var(--text-color);
+    z-index: 100;
+}
+/* Inside @media (max-width: 768px) */
+
+.about-item p {
+    font-size: 2rem; /* Make text slightly smaller on mobile phones */
+}
+/* Inside @media (max-width: 768px) */
+
+.about-section {
+    flex-direction: column; /* Stacks image and text vertically */
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+/* This makes sure the "reversed" row ALSO stacks normally */
+.about-section.reverse {
+    flex-direction: column;
+}
+
+.about-text p {
+    font-size: 2.2rem; /* A smaller, more appropriate font size for mobile */
+    margin-top: 20px;
+}
+.about-vertical {
+    gap: 60px; /* Reduce the space between items on mobile */
+}
+/* Inside @media (max-width: 768px) */
+
+.about-row {
+    flex-direction: column; /* Stack text and image vertically */
+    gap: 30px; /* Adjust the gap for vertical layout */
+}
+
+/* We must override the reverse rule on mobile */
+.about-row.row-reverse {
+    flex-direction: column;
+}
+.image-gallery img {
+    width: 100%; /* Makes image fill the column */
+    height: 250px; /* Fixed height for uniformity */
+    object-fit: cover; /* Prevents images from stretching */
+    border-radius: 8px; /* Slightly rounded corners */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05); /* Slightly enlarges image on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.content-page h2 {
+    font-size: 2rem;
+    color: var(--text-color);
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.inline-link {
+    color: var(--accent-color);
+    text-decoration: underline;
+    font-weight: bold;
+}
+.inline-link:hover {
+    text-shadow: 0 0 5px var(--accent-color);
+}
+
+    /* --- General Adjustments --- */
+    body {
+        overflow: auto; /* Allow scrolling on all pages on mobile */
+    }
+
+    /* --- Header & Mobile Navigation --- */
+    header {
+        padding: 20px; /* Reduce header padding */
+    }
+
+    /* Hide the original desktop navigation */
+    header nav {
+        display: none;
+    }
+    
+    /* Make the hamburger menu visible */
+    .hamburger-menu {
+        display: flex; /* This makes it visible */
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 25px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1001; /* Must be on top of the nav panel */
+    }
+
+    .hamburger-menu span {
+        width: 30px;
+        height: 3px;
+        background-color: var(--text-color);
+        border-radius: 5px;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    /* Animation for hamburger to 'X' */
+    .hamburger-menu.active span:nth-child(1) {
+        transform: rotate(45deg) translate(7px, 7px);
+    }
+    .hamburger-menu.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-menu.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+
+    /* Style the mobile nav panel, which is now visible when active */
+    .mobile-nav {
+        display: flex; /* This makes it visible when it gets the active class */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(20, 20, 22, 0.95);
+        backdrop-filter: blur(10px);
+        transform: translateX(100%); /* Hide it off-screen */
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .mobile-nav.active {
+        transform: translateX(0); /* Bring it on-screen */
+    }
+
+    .mobile-nav a {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+
+    /* --- Hide Sidebars --- */
+    .sidebar-left, .sidebar-right {
+        display: none;
+    }
+
+    /* --- Main Hero Content (Homepage) --- */
+    .hero-content {
+        transform: scale(0.7); /* Scale down the entire hero section */
+    }
+
+    .name-overlay {
+        font-size: 22vw; /* Use viewport width for responsive font size */
+    }
+
+    /* --- Background Text --- */
+    #bg-a, #bg-y {
+        display: none; /* Hide some letters to reduce clutter */
+    }
+    
+    .bg-text {
+        font-size: 45vw; /* Make remaining letters larger but fewer */
+    }
+
+    /* --- Content Pages (Projects, About, etc.) --- */
+    .content-page {
+        padding: 120px 25px 40px; /* Reduce padding for mobile */
+    }
+
+    .content-page h1 {
+        font-size: 2.5rem;
+    }
+
+    .content-page p {
+        font-size: 1rem;
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    .hero-content {
+        transform: scale(0.6);
+    }
+
+    .name-overlay {
+        font-size: 26vw;
+    }
+}
+
+/* ========================================= */
+/*   ALTERNATING ABOUT PAGE STYLES (FINAL)   */
+/* ========================================= */
+
+.about-alternating {
+    padding-bottom: 100px; /* Space at the bottom of the page */
+}
+
+.about-section {
+    display: flex;         /* Creates the side-by-side "row" */
+    align-items: center;   /* Vertically aligns text and image */
+    gap: 40px;             /* Space between text and image */
+    margin: 100px auto;    /* Space between each section and centers it */
+    max-width: 1000px;     /* Prevents the layout from becoming too wide on large screens */
+}
+
+/* This class flips the order of elements for the second row */
+.about-section.reverse {
+    flex-direction: row-reverse;
+}
+
+.about-text {
+    flex: 1; /* Allows the text container to be flexible */
+    text-align: center;
+}
+
+.about-text p {
+    font-size: 3.5rem; /* Large, but controlled size */
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-color);
+    text-transform: uppercase;
+}
+
+.about-image {
+    flex: 1; /* Allows the image container to be flexible */
+    display: flex; /* Helps center the image if needed */
+    justify-content: center;
+    align-items: center;
+}
+
+.about-image img {
+    width: 100%;
+    max-width: 450px; /* Controls the max size of the image itself */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}

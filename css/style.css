@@ -21,6 +21,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     overflow: hidden; /* Prevents scrollbars on homepage */
+    overflow-x: hidden;
     opacity: 0;
     animation: fadeIn 1s ease-in-out forwards;
 }

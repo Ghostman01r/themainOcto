@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const moveX = -(y / 9.8) * 0.5; // Invert y-axis for natural "window" effect
         const moveY =  (x / 9.8) * 0.5;
 
-        const imageMoveIntensity = 40; // Increased intensity for a better mobile effect
+        const imageMoveIntensity = 80; // Increased intensity for a better mobile effect
 
         if (profilePic) {
             profilePic.style.transform = `translate(${moveX * imageMoveIntensity}px, ${moveY * imageMoveIntensity}px)`;

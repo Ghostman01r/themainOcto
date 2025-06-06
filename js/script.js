@@ -1,33 +1,86 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Parallax Mouse Move Effect (for homepage only) ---
-    // This effect is applied only if the hero-content element exists.
-    const heroContent = document.querySelector('.hero-content');
-    if (heroContent) {
+    // --- Gyroscope-based Parallax for Mobile Devices ---
+    function handleDeviceMotion(event) {
+        const heroContent = document.querySelector('.hero-content');
+        if (!heroContent) return; // Only run on homepage
+
         const profilePic = document.querySelector('.profile-pic');
         const bgTexts = document.querySelectorAll('.bg-text');
 
-        document.addEventListener('mousemove', (e) => {
-            // Get cursor position from the center of the screen (-0.5 to 0.5)
-            const { clientX, clientY } = e;
-            const x = (clientX / window.innerWidth) - 0.5;
-            const y = (clientY / window.innerHeight) - 0.5;
+        // accelerationIncludingGravity gives us the orientation in x, y, z
+        const { x, y } = event.accelerationIncludingGravity;
 
-            // --- THIS IS THE PART THAT MOVES THE IMAGE ---
-            // The number (e.g., 20) controls the intensity of the movement.
-            const imageMoveIntensity = 20; 
-            if (profilePic) {
-                profilePic.style.transform = `translate(${-x * imageMoveIntensity}px, ${-y * imageMoveIntensity}px)`;
-            }
-            
-            // This part moves the background letters for a depth effect.
-            bgTexts.forEach((text, index) => {
-                const speed = (index + 1) * 5; // Different speeds for each letter
-                // We combine the parallax movement with the existing float animation transform
-                const floatTransform = getComputedStyle(text).transform;
-                text.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
-            });
+        // Normalize the values. A phone lying flat is ~9.8 on y. Tilted is less.
+        // We'll map a tilt of +/- 5 to our -0.5 to 0.5 range.
+        const moveX = -(y / 9.8) * 0.5; // Invert y-axis for natural movement
+        const moveY = (x / 9.8) * 0.5;
+
+        const imageMoveIntensity = 40; // Increased intensity for a better mobile effect
+
+        if (profilePic) {
+            profilePic.style.transform = `translate(${moveX * imageMoveIntensity}px, ${moveY * imageMoveIntensity}px)`;
+        }
+
+        bgTexts.forEach((text, index) => {
+            const speed = (index + 1) * 10;
+            text.style.transform = `translate(${moveX * speed}px, ${moveY * speed}px)`;
         });
+    }
+
+    // --- Function to Request Permission (Needed for iOS 13+) ---
+    function requestDeviceMotionPermission() {
+        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener('devicemotion', handleDeviceMotion);
+                    }
+                })
+                .catch(console.error);
+        } else {
+            // For non-iOS 13+ devices like Android
+            window.addEventListener('devicemotion', handleDeviceMotion);
+        }
+    }
+
+    // --- Main Parallax Logic ---
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent) {
+        // Detect if it's a touch device (a good proxy for mobile)
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        if (isTouchDevice) {
+            // On mobile, we use the gyroscope. Add a button to request permission.
+            const permissionButton = document.createElement('button');
+            permissionButton.id = 'motion-permission-btn';
+            permissionButton.innerHTML = '<i class="fas fa-arrows-alt"></i> Enable Motion';
+            document.body.appendChild(permissionButton);
+
+            permissionButton.addEventListener('click', () => {
+                requestDeviceMotionPermission();
+                permissionButton.style.display = 'none'; // Hide button after click
+            });
+            
+        } else {
+            // On desktop, use the existing mousemove parallax
+            document.addEventListener('mousemove', (e) => {
+                const profilePic = document.querySelector('.profile-pic');
+                const bgTexts = document.querySelectorAll('.bg-text');
+                const { clientX, clientY } = e;
+                const x = (clientX / window.innerWidth) - 0.5;
+                const y = (clientY / window.innerHeight) - 0.5;
+                const imageMoveIntensity = 20;
+
+                if (profilePic) {
+                    profilePic.style.transform = `translate(${-x * imageMoveIntensity}px, ${-y * imageMoveIntensity}px)`;
+                }
+                bgTexts.forEach((text, index) => {
+                    const speed = (index + 1) * 5;
+                    text.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+            });
+        }
     }
 
     // --- Add scroll class for content pages ---
@@ -39,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Mobile Navigation Toggle ---
     const hamburger = document.querySelector('.hamburger-menu');
     const mobileNav = document.querySelector('.mobile-nav');
-
     if (hamburger && mobileNav) {
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
@@ -47,6 +99,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // This fade-in will run on every page for a consistent entry animation.
+    // --- Background Music Controls ---
+    const music = document.getElementById('background-music');
+    const musicBtn = document.getElementById('music-toggle-btn');
+    if (music && musicBtn) {
+        musicBtn.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                musicBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                music.pause();
+                musicBtn.innerHTML = '<i class="fas fa-volume-off"></i>';
+            }
+        });
+    }
+
+    // This fade-in will run on every page
     document.body.style.opacity = '1';
 });

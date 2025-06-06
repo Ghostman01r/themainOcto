@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+lucky - The Boss</title>
+
+    <!-- Link to your single CSS file -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Link to Font Awesome for Icons (requires internet) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Faded Background Letters for decoration -->
+    <div class="bg-text" id="bg-n">L</div>
+    <div class="bg-text" id="bg-a">U</div>
+    <div class="bg-text" id="bg-t1">C</div>
+    <div class="bg-text" id="bg-t2">K</div>-
+    <div class="bg-text" id="bg-y">Y</div>
+
+    <!-- ======================= HEADER ======================= -->
+    <header>
+        <div class="LOGO">T1 Lucky - Boss of the World.</div>
+
+        <!-- Desktop Navigation (This will be hidden on mobile by CSS) -->
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">HOME</a></li>
+                
+            </ul>
+        </nav>
+        
+        <!-- NEW: Wrapper for right-side header items -->
+        <div class="header-right">
+            <div class="lang-switcher">
+                <button>EN</button>
+            </div>
+        
+            <!-- NEW: Hamburger Icon for Mobile (Hidden on desktop by CSS) -->
+            <button class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- NEW: Mobile Navigation Panel (Hidden by default, shown by JavaScript) -->
+    <div class="mobile-nav">
+        <a href="index.html">HOME</a>
+        <a href="about.html">ABOUT</a>
+    </div>
+    <!-- ===================== END HEADER ===================== -->
+
+
+    <!-- Left Sidebar (Hidden on mobile by CSS) -->
+    <aside class="sidebar-left">
+<a href="https://www.instagram.com/goud_lucky_mrx?"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </aside>
+
+<a href="mailto:mrsharktheironman.com" class="bottom-left-icon">@</a>
+
+    <!-- Right Sidebar (Hidden on mobile by CSS) -->
+    <aside class="sidebar-right">
+        <div class="page-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <div class="scroll-arrows">
+            <i class="fas fa-arrow-up"></i>
+            <i class="fas fa-arrow-down"></i>
+        </div>
+    </aside>
+
+    <!-- ======================= MAIN CONTENT ======================= -->
+    <main>
+        <div class="hero-content">
+            <div class="glow-circle"></div>
+            
+            <!-- !!! YOUR PHOTO GOES HERE !!! -->
+            <!-- Place your transparent PNG in the "images" folder -->
+            <img src="images/your-photo.png" alt="A photo of you" class="profile-pic">
+
+            <h1 class="name-overlay">
+                <!-- Change your name here -->
+                <span class="name-part-1">LU</span>
+                <span class="name-part-2">CKY</span>
+            </h1>
+
+            <div class="name-caption">
+                <hr>
+                <!-- And change it here -->
+                <span>Lucky</span>
+            </div>
+        </div>
+    </main>
+    <!-- ===================== END MAIN CONTENT ===================== -->
+ <!-- NEW: Mobile-only Instagram Icon -->
+    <a href="#" class="mobile-insta-icon"><i class="fab fa-instagram"></i></a>
+    <!-- Link to your JavaScript file at the end of the body -->
+    <script src="js/script.js"></script>
+
+</body>
+</html>

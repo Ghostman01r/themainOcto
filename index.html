@@ -465,6 +465,131 @@
             transition: width 2.0s ease-out; /* <-- DURATION CHANGED from 1.2s to 2.0s */
         }
 
+        /* --- RESPONSIVE STYLES --- */
+        /* Apply styles for tablets and smaller devices */
+        @media (max-width: 768px) {
+            /* Reduce main container padding */
+            .page-container {
+                padding: 20px 10px;
+            }
+
+            /* Reduce rounding and internal padding */
+            .white-container {
+                border-radius: 30px; /* Was 48px */
+                padding: 6px;
+            }
+            .inner-card {
+                border-radius: 24px; /* Was 40px */
+                padding: 30px 20px;
+            }
+
+            /* Stack the header */
+            .portfolio-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                padding-bottom: 20px; /* Adjust padding */
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                width: 100%;
+                word-break: break-all; /* Ensure long email wraps */
+            }
+            .header-right {
+                justify-content: center;
+                flex-wrap: wrap; /* Allow buttons to wrap */
+            }
+
+            /* Adjust hero text */
+            .hero-headline {
+                font-size: 28px; /* Was 38px */
+                margin-top: 25px;
+            }
+
+            /* Adjust project icon gap */
+            .project-icons-container {
+                gap: 40px; /* Was 80px */
+                padding: 10px;
+            }
+            
+            /* Adjust section titles */
+            .section-title,
+            .gradient-headline {
+                font-size: 24px; /* Was 32px */
+            }
+
+            /* Adjust section title padding */
+            .section-title {
+                padding-top: 80px; /* Was 100px */
+            }
+            
+            /* Adjust padding on sp3 wrapper */
+            .sp3-content-wrapper {
+                padding: 60px 15px 15px 15px; /* Adjust padding */
+            }
+
+            /* Adjust CTA section padding */
+            #card-sp5 {
+                padding-top: 120px; /* Was 150px */
+            }
+
+            /* Stack the footer */
+            .portfolio-footer {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                text-align: center;
+            }
+            .footer-right {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Further adjustments for small mobile phones */
+        @media (max-width: 480px) {
+            .white-container {
+                border-radius: 24px;
+            }
+            .inner-card {
+                border-radius: 18px;
+            }
+            
+            .hero-headline {
+                font-size: 24px; /* Even smaller */
+            }
+            
+            .section-title,
+            .gradient-headline {
+                font-size: 22px; /* Even smaller */
+            }
+
+            .cta-button-group {
+                flex-direction: column; /* Stack the CTA buttons */
+                align-items: center;
+                width: 100%;
+            }
+            .main-cta-button {
+                width: 80%;
+                text-align: center;
+            }
+            
+            .project-icons-container {
+                gap: 30px;
+            }
+            
+            .project-icon {
+                font-size: 40px; /* Slightly smaller icons */
+            }
+            
+            .profile-info-wrapper {
+                 flex-direction: column; /* Stack profile pic and name */
+                 gap: 10px;
+            }
+        }
+
     </style>
 </head>
 <body>

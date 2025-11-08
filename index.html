@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Portfolio</title>
+    
+    <!-- Google Fonts: Inter --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the page */
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* --- START OF RESTORED STYLES --- */
+        /* Container to center the portfolio on the page */
+        .page-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px; /* Spacing from screen edges */
+            box-sizing: border-box;
+        }
+
+        /* The main white, rounded container */
+        .white-container {
+            width: 100%;
+            max-width: 1100px; /* Set a max width like the design */
+            background-color: #ffffff;
+            border-radius: 48px; 
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); /* A nice subtle shadow */
+            padding: 8px; /* Very thin "border" padding */
+            box-sizing: border-box;
+            
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+            overflow: hidden; /* Clip contents */
+        }
+
+        /* --- HEADER STYLES --- */
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px 30px 10px; 
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+        .header-btn {
+            background-color: #eee;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px; 
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-decoration: none; 
+            color: #333; 
+            display: inline-block; 
+        }
+        .header-btn:hover {
+            background-color: #dcdcdc;
+        }
+        .header-right {
+            display: flex; 
+            gap: 8px; 
+        }
+        .header-right a {
+            text-decoration: none;
+        }
+        /* --- END HEADER STYLES --- */
+
+
+        /* The "sp2" card inside the white container */
+        .inner-card {
+            background-color: #e0e0e0;
+            border-radius: 40px; 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 40px 30px 30px 30px; 
+            box-sizing: border-box;
+            min-height: 600px; 
+            
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; 
+            align-items: center; 
+            position: relative; 
+        }
+
+        /* --- UPDATED Rule for first card (sp2) --- */
+        #card-sp2 {
+            z-index: 20; 
+            margin-bottom: -8px; /* Compensate for gap */
+        }
+
+        /* --- UPDATED Rule for sp3 card --- */
+        #card-sp3 {
+            justify-content: flex-start; 
+            min-height: 675px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -8px; /* Compensate for gap */
+            margin-bottom: -8px; /* Compensate for gap */
+        }
+
+        /* --- NEW Rule for sp5 card --- */
+        #card-sp5 {
+            background-color: #ffffff; 
+            margin-top: -65px; 
+            position: relative; 
+            padding-bottom: 20px; 
+            padding-top: 150px;
+        }
+
+
+        /* --- NEW Rule for sp3 content wrapper --- */
+        .sp3-content-wrapper {
+            padding: 80px 30px 30px 30px; 
+            width: 100%; 
+            box-sizing: border-box;
+        }
+
+        
+        /* --- UPDATED CARD STYLE (sp_mid) --- */
+        #card-sp-mid {
+            min-height: 400px; 
+            justify-content: flex-start;
+            align-items: center; 
+            position: relative; 
+            z-index: 10; 
+            margin-top: -100px; 
+            margin-bottom: -70px; 
+            background-color: #ffffff; 
+        }
+
+        /* Wrapper for profile image and name tag */
+        .profile-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            margin-top: 20px; 
+            position: relative; 
+        }
+
+        /* The circular placeholder for the profile image */
+        .profile-image-container {
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            border: 3px solid #e0e0e0; 
+            background-color: #f8f8f8; 
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* <-- ADDED: To clip the image to the circle */
+        }
+        /* --- REMOVED: .fa-user rule is no longer needed --- */
+        /* .profile-image-container .fa-user {
+            font-size: 40px; 
+            color: #b0b0b0; 
+        } */
+
+        /* --- NEW: Style for the profile image --- */
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the circle without stretching */
+        }
+
+        .name-tag {
+            background-color: #f8f8f8; 
+            border-radius: 25px; 
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); 
+            display: flex;
+            align-items: center;
+            gap: 5px; 
+            white-space: nowrap; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* <-- ADDED transition */
+        }
+
+        /* --- NEW: Link styles for name tag --- */
+        .name-tag-link {
+            text-decoration: none;
+            color: #333;
+        }
+        .name-tag-link:hover .name-tag {
+             transform: translateY(-2px);
+             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .hero-headline {
+            font-size: 38px; 
+            font-weight: 600; 
+            text-align: center;
+            line-height: 1.3; 
+            margin-top: 35px; 
+            max-width: 700px; 
+
+            /* --- Gradient Text Effect --- */
+            background: linear-gradient(to right, #333 70%, #999 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text; 
+            text-fill-color: transparent; 
+        }
+
+        /* --- NEW: Gradient headline for CTA section --- */
+        .gradient-headline {
+            font-size: 32px; 
+            font-weight: 600; 
+            text-align: center;
+            line-height: 1.3; 
+            margin-top: 25px; 
+            margin-bottom: 25px;
+            max-width: 700px; 
+            background: linear-gradient(to right, #333 70%, #999 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text; 
+            text-fill-color: transparent; 
+        }
+
+
+        .main-cta-button {
+            background-color: #222; 
+            color: #fff; 
+            border: none;
+            padding: 12px 35px; 
+            border-radius: 50px; 
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 30px; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            text-decoration: none; /* <-- ADDED: Ensures <a> tags look like buttons */
+        }
+
+        .main-cta-button:hover {
+            background-color: #000;
+            transform: translateY(-2px); 
+        }
+        
+        /* --- NEW: White button style --- */
+        .btn-white {
+            background-color: #ffffff;
+            color: #222;
+            border: 1px solid #ddd; /* Light border */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+        }
+        .btn-white:hover {
+            background-color: #f9f9f9; /* Slight grey on hover */
+            transform: translateY(-2px); 
+        }
+
+        /* --- NEW: CTA Icon --- */
+        .cta-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background-color: #222; /* Black circle */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        .cta-icon-wrapper .fa-handshake {
+            font-size: 36px;
+            color: #fff; /* White icon */
+        }
+
+        /* --- NEW: Button Group --- */
+        .cta-button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px; /* Space from headline */
+            margin-bottom: 30px; /* Space from footer */
+        }
+
+
+        /* --- NEW FOOTER STYLES --- */
+        .portfolio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: auto; /* Pushes footer to the bottom */
+            padding-top: 30px; /* Space from content above */
+            padding-bottom: 0px; /* Space from bottom of card */
+            padding-left: 10px; /* Align with header content */
+            padding-right: 10px; /* Align with header content */
+            box-sizing: border-box; /* Include padding in width */
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* --- NEW SECTION TITLE STYLE --- */
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #555; 
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+            padding-top: 100px; /* <-- UPDATED: Was 80px */
+        }
+
+        /* --- NEW PROJECT ICON STYLES --- */
+        .project-icons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px; /* <-- UPDATED: Was 60px */
+            padding: 20px;
+            margin-top: 20px; /* Space below title */
+            width: 100%;
+            flex-wrap: wrap; /* Allow icons to wrap on small screens */
+        }
+        /* --- END OF RESTORED STYLES --- */
+
+        /* --- UPDATED: PROJECT ICON STYLES (for animation) --- */
+        .project-icon {
+            font-size: 50px; /* Large icons */
+            color: #555; /* Default icon color */
+            
+            /* Animation base state */
+            opacity: 0;
+            transition: opacity 1.0s ease-out, transform 1.0s ease-out, color 0.2s ease; /* <-- DURATION CHANGED from 0.6s to 1.0s */
+        }
+
+        /* Staggered animation delays and directions */
+        .project-icon:nth-child(1) {
+            transform: translateX(-80px);
+            transition-delay: 0.1s;
+        }
+        .project-icon:nth-child(2) {
+            transform: translateX(80px);
+            transition-delay: 0.2s;
+        }
+        .project-icon:nth-child(3) {
+            transform: translateX(-80px);
+            transition-delay: 0.3s;
+        }
+        .project-icon:nth-child(4) {
+            transform: translateX(80px);
+            transition-delay: 0.4s;
+        }
+
+        /* Visible state */
+        .project-icon.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Hover state: must combine with visible transform */
+        .project-icon.is-visible:hover {
+            transform: scale(1.1) translateX(0); 
+            color: #000;
+        }
+        /* Fallback for non-visible hover */
+         .project-icon:hover {
+            transform: scale(1.1); 
+            color: #000;
+        }
+        /* --- END PROJECT ICON STYLES --- */
+
+
+        /* --- REMOVED YouTube color rule --- */
+
+        /* --- NEW: Override section title padding for sp3 --- */
+        #card-sp3 .section-title {
+            padding-top: 0; /* Wrapper handles top padding */
+            padding-bottom: 20px; /* Add some space below title */
+        }
+
+        /* --- NEW: Skills List Styles --- */
+        .skills-list {
+            width: 100%;
+            max-width: 700px; /* Set a max width for the list */
+            margin: 20px auto 0 auto; /* Center and add space */
+            display: flex;
+            flex-direction: row; /* <-- CHANGED */
+            flex-wrap: wrap; /* <-- ADDED */
+            justify-content: center; /* <-- ADDED */
+            gap: 15px; /* <-- UPDATED */
+        }
+        .skill-item {
+            display: flex;
+            flex-direction: column; /* <-- CHANGED */
+            align-items: flex-start; /* <-- CHANGED */
+            gap: 0; /* <-- UPDATED */
+            background-color: #f0f2f5; /* Light bg for contrast */
+            padding: 12px 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-basis: 280px; /* <-- ADDED: Base width for grid item */
+            flex-grow: 1; /* <-- ADDED: Allow items to grow */
+        }
+        .skill-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%; /* <-- ADDED */
+            /* REMOVED flex-basis and flex-shrink */
+        }
+        .skill-item i {
+            font-size: 20px;
+            color: #333;
+            width: 25px;
+            text-align: center;
+        }
+        .skill-name {
+            font-weight: 500;
+            font-size: 15px;
+            color: #333;
+            flex-grow: 1; /* <-- ADDED */
+        }
+        .progress-bar-container {
+            /* REMOVED flex-grow and flex-basis */
+            width: 100%; /* <-- ADDED */
+            margin-top: 12px; /* <-- ADDED */
+            height: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, #444, #222); /* Dark gradient fill */
+            border-radius: 5px;
+            transition: width 2.0s ease-out; /* <-- DURATION CHANGED from 1.2s to 2.0s */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <div class="white-container">
+            
+            <!-- --- FIRST INNER CARD (sp2) --- -->
+            <div class="inner-card" id="card-sp2">
+                
+                <header class="portfolio-header">
+                    <div class="header-left">
+                        <!-- --- UPDATED: Added ID for email copy --- -->
+                        <span id="email-address">whosethebossitsme77@gmail.com</span>
+                        <!-- Typo 'classf' corrected to 'class' -->
+                        <button class="header-btn">CV</button>
+                    </div>
+                    <nav class="header-right">
+                        <a href="#" target="_blank" class="header-btn">LinkedIn</a>
+                        <!-- --- UPDATED: Instagram Link --- -->
+                        <a href="https://www.instagram.com/goud_lucky_mrx/" target="_blank" class="header-btn">Instagram</a>
+                        <a href="#" target="_blank" " class="header-btn">YouTube</a>
+                    </nav>
+                </header>
+                
+                <div class="profile-info-wrapper">
+                    <div class="profile-image-container">
+                        <!-- --- UPDATED: Replaced icon with <img> tag --- -->
+                        <!-- Replace 'https://placehold.co/100x100/f8f8f8/b0b0b0?text=Me' with the URL to your photo -->
+                        <img src="https://lh3.googleusercontent.com/d/1VRUE7mq4Yyg256_g5RSLMW_AtFpBYc0E" alt="Goud Lucky" class="profile-image">
+                    </div>
+                    <!-- --- UPDATED: Added link to name tag --- -->
+                    <a href="#" class="name-tag-link">
+                        <span class="name-tag">Goud Lucky</span>
+                    </a>
+                </div>
+
+                <p class="hero-headline">
+                    Hi, I'm Goud Lucky, <br>A Data Science Student from IIT Madras.
+                </p>
+
+                <button class="main-cta-button">
+                    Learn More About Me
+                </button>
+
+            </div>
+            
+            <!-- --- NEW MIDDLE CARD (sp-mid) --- -->
+            <div class="inner-card" id="card-sp-mid">
+                <h2 class="section-title">Projects</h2>
+                
+                <!-- --- NEW ICONS ADDED --- -->
+                <div class="project-icons-container">
+                    <i class="project-icon fa-brands fa-youtube"></i>
+                    <i class="project-icon fa-solid fa-sitemap"></i>
+                    <i class="project-icon fa-solid fa-desktop"></i>
+                    <i class="project-icon fa-solid fa-table-cells"></i>
+                </div>
+
+            </div>
+
+            <!-- --- SECOND INNER CARD (sp3) --- -->
+            <div class="inner-card" id="card-sp3">
+                
+                <!-- --- New content wrapper for sp3 --- -->
+                <div class="sp3-content-wrapper">
+                    
+                    <!-- --- "SKILLS" TITLE --- -->
+                    <h2 class="section-title">Skills</h2>
+
+                    <!-- --- NEW: SKILLS LIST (REORDERED) --- -->
+                    <div class="skills-list">
+                        
+                        <!-- Skill 1: Website Development -->
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="fa-solid fa-code"></i>
+                                <span class="skill-name">Website Development</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill 2: Creative Thinking -->
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="fa-solid fa-palette"></i>
+                                <span class="skill-name">Creative Thinking</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 75%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill 3: Data Science -->
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="fa-solid fa-brain"></i>
+                                <span class="skill-name">Data Science</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill 4: Leadership -->
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="fa-solid fa-users"></i>
+                                <span class="skill-name">Leadership</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 70%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill 5: Editing -->
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="fa-solid fa-camera-retro"></i>
+                                <span class="skill-name">Video & Photo Editing</span> <!-- <-- TYPO FIX: Added class= -->
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 60%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill 6: Logical Reasoning -->
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="fa-solid fa-gears"></i>
+                                <span class="skill-name">Logical Reasoning</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 80%;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- --- END SKILLS LIST --- -->
+
+                    <!-- Removed placeholder text -->
+                    
+                </div>
+                
+            </div>
+
+            <!-- --- NEW BOTTOM CARD (sp5) --- -->
+            <div class="inner-card" id="card-sp5">
+                
+                <!-- --- NEW CONTENT FOR SP5 --- -->
+                <div class="cta-icon-wrapper">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+
+                <p class="gradient-headline">
+                    Tell me about your next project
+                </p>
+                <div class="cta-button-group">
+                    <!-- --- UPDATED: Added ID for email button --- -->
+                    <button id="email-btn" class="main-cta-button btn-white">Email Me</button>
+                    <!-- --- UPDATED: Changed button to <a> tag for WhatsApp --- -->
+                    <a href="https://www.whatsapp.com/" target="_blank" class="main-cta-button">WhatsApp</a>
+                </div>
+                <!-- --- END NEW CONTENT --- -->
+
+
+                <!-- --- NEW FOOTER ADDED --- -->
+                <footer class="portfolio-footer">
+                    <span>&copy; 2024 Goud Lucky. All rights reserved.</span>
+                    <nav class="footer-right">
+                        <a href="#" target="_blank" class="header-btn">LinkedIn</a>
+                        <!-- --- UPDATED: Instagram Link --- -->
+                        <a href="https://www.instagram.com/goud_lucky_mrx/" target="_blank" class="header-btn">Instagram</a>
+                        <a href="#" target="_blank" class="header-btn">YouTube</a>
+                    </nav>
+                </footer>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        console.log("Portfolio page loaded!");
+
+        // --- NEW: Intersection Observer for Animations ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Animate Project Icons ---
+            const projectIcons = document.querySelectorAll('.project-icon');
+            const iconObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    // If the icon is in the viewport
+                    if (entry.isIntersecting) {
+                        // Add the .is-visible class to trigger the CSS animation
+                        entry.target.classList.add('is-visible');
+                        // Stop observing this icon once it's visible
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null, // relative to the viewport
+                threshold: 0.1 // trigger when 10% of the item is visible
+            });
+
+            // Observe each icon
+            projectIcons.forEach(icon => {
+                iconObserver.observe(icon);
+            });
+
+            // --- 2. Animate Skill Bars ---
+            const skillItems = document.querySelectorAll('.skill-item');
+            const skillObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target.querySelector('.progress-bar-fill');
+                        if (bar) {
+                            // Get the target width from the inline style
+                            const targetWidth = bar.style.width; 
+                            
+                            // Set width to 0% first to animate *from* 0
+                            bar.style.width = '0%';
+                            
+                            // A tiny delay ensures the browser registers the 0% before transitioning
+                            setTimeout(() => {
+                                // Now set the *real* target width, triggering the CSS transition
+                                bar.style.width = targetWidth;
+                            }, 100);
+                        }
+                        // Stop observing this skill item
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.5 // Trigger when 50% of the skill item is visible
+            });
+
+            // Observe each skill item
+            skillItems.forEach(item => {
+                skillObserver.observe(item);
+            });
+
+            // --- 3. Email Button Copy ---
+            const emailBtn = document.getElementById('email-btn');
+            const emailAddress = document.getElementById('email-address').textContent;
+
+            if (emailBtn && emailAddress) {
+                emailBtn.addEventListener('click', () => {
+                    // Use the 'execCommand' method for compatibility in iFrames
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.value = emailAddress;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+                    try {
+                        document.execCommand('copy');
+                        // Change button text for feedback
+                        emailBtn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            emailBtn.textContent = 'Email Me';
+                        }, 2000); // Revert after 2 seconds
+                    } catch (err) {
+                        console.error('Failed to copy email: ', err);
+                        emailBtn.textContent = 'Copy Failed';
+                        setTimeout(() => {
+                            emailBtn.textContent = 'Email Me';
+                        }, 2000);
+                    }
+
+                    document.body.removeChild(tempTextArea);
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>

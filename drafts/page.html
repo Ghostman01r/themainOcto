@@ -732,11 +732,13 @@
 
         // Helper functions for both Mouse and Touch interactions
         const startEffect = () => {
-            // Visuals
+            // Visuals (always apply the gold visual effect)
             applyGoldMode(true);
             isProfileHovered = true;
 
-            // Audio Logic
+            // Audio Logic: only play music when on the front page (stage 0)
+            if (currentStage !== 0) return;
+
             if(audio) {
                 // Set start time to 0 to play from beginning
                 audio.currentTime = 0;
@@ -818,6 +820,11 @@
                 if(i === currentStage) d.classList.add('active');
                 else d.classList.remove('active');
             });
+
+            // If we've left the front page (stage 0), ensure audio and gold visuals are stopped
+            if (currentStage !== 0 && typeof stopEffect === 'function') {
+                try { stopEffect(); } catch (e) { /* ignore */ }
+            }
         }
 
         // --- DESKTOP WHEEL HANDLER ---
@@ -849,12 +856,8 @@
             const index = Math.round(scrollLeft / width);
             
             if (index !== currentStage) {
-                currentStage = index;
-                // Update dots visually
-                dots.forEach((d, i) => {
-                    if(i === currentStage) d.classList.add('active');
-                    else d.classList.remove('active');
-                });
+                // Route mobile slide changes through updateStage so stopEffect runs when leaving stage 0
+                updateStage(index);
             }
         });
 

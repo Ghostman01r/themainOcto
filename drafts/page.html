@@ -95,7 +95,7 @@
             border-color: var(--accent-primary);
         }
 
-        /* --- STAGE CONFIGURATIONS (DESKTOP) --- */
+        /* --- DESKTOP STAGE CONFIGURATIONS (> 768px) --- */
         @media (min-width: 768px) {
             /* STAGE 0 */
             body[data-stage="0"] #card-profile { top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent; backdrop-filter: none; border-color: transparent; box-shadow: none; transition-delay: 0s; }
@@ -230,6 +230,7 @@
                 height: 200px !important; 
                 margin-bottom: 1rem;
                 border-radius: 50%;
+                /* Remove mask from desktop stage 0 if present */
                 -webkit-mask-image: none !important;
                 mask-image: none !important;
                 border: 4px solid var(--bg-color) !important;
@@ -263,29 +264,24 @@
             }
         }
 
+
         /* --- INTERNAL CONTENT STYLING --- */
         
         .profile-img-container { flex-shrink: 0; transition: all 1.2s ease; cursor: pointer; position: relative; z-index: 5; }
         .profile-img {
-            width: 220px; height: 220px;
-            border-radius: 50%;
-            border: 6px solid var(--bg-color);
+            width: 220px; height: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.1);
             object-fit: cover;
-            transition: width 1.2s ease, height 1.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: width 1.2s ease, height 1.2s ease, box-shadow 0.3s ease;
         }
         
-        /* Gold Mode Hover Effect on Image */
         body.gold-mode .profile-img {
-            border-color: #FFD700 !important;
             box-shadow: 0 0 50px rgba(255, 215, 0, 0.6) !important;
         }
         
         /* Desktop specific sizing logic */
         @media (min-width: 768px) {
-            body:not([data-stage="0"]) .profile-img { width: 140px; height: 140px; border-width: 4px; }
-            
-            /* STAGE 0 Override - Large profile pic */
+            body:not([data-stage="0"]) .profile-img { width: 140px; height: 140px; border-width: 4px; border-radius: 50%; border: 4px solid var(--bg-color); }
             body[data-stage="0"] .profile-img {
                 width: 280px; 
                 border-radius: 0; 
@@ -293,7 +289,6 @@
                 -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
                 mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
             }
-
             body:not([data-stage="0"]) .profile-text-wrapper { align-items: flex-start; margin-top: 0; }
             body[data-stage="0"] .profile-text-wrapper { align-items: center; text-align: center; margin-top: -70px; }
             
@@ -317,19 +312,9 @@
             z-index: 10;
         }
 
-        h1.hero-title {
-            transition: all 1.2s ease; transform-origin: left center;
-            color: var(--text-main);
-            text-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-        }
-
-        p.hero-subtitle {
-            transition: all 1.2s ease, color 0.3s ease;
-        }
-
-        .hero-desc {
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+        h1.hero-title { color: var(--text-main); transition: all 1.2s ease; }
+        p.hero-subtitle { transition: all 1.2s ease; }
+        .hero-desc { transition: opacity 0.5s ease, transform 0.5s ease; }
 
         /* THEME BUTTON */
         #theme-btn {
@@ -382,7 +367,7 @@
         body:not([data-stage="0"]) .skill-fill-1 { width: 95%; transition-delay: 0.2s; }
         body:not([data-stage="0"]) .skill-fill-2 { width: 88%; transition-delay: 0.4s; }
         body:not([data-stage="0"]) .skill-fill-3 { width: 92%; transition-delay: 0.6s; }
-
+        
         /* Force skill fill on mobile since stage logic is bypassed */
         @media (max-width: 767px) {
             .skill-fill-1 { width: 95% !important; }
@@ -437,41 +422,6 @@
             padding: 2rem;
             box-sizing: border-box;
         }
-
-        /* SECRET BUTTON STYLES */
-        #secret-btn {
-            position: absolute;
-            top: 50%;
-            right: -60px; /* Position to the right of image on desktop */
-            transform: translateY(-50%) scale(0);
-            background: var(--text-main);
-            color: var(--bg-color);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-            z-index: 20;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            font-size: 1.25rem;
-        }
-        #secret-btn.visible {
-            opacity: 1;
-            transform: translateY(-50%) scale(1);
-            pointer-events: auto;
-        }
-        #secret-btn:hover {
-            transform: translateY(-50%) scale(1.1);
-        }
-        
-        /* Mobile adjustment for secret button */
-        @media (max-width: 767px) {
-            #secret-btn {
-                right: -20px;
-                top: 80%;
-            }
-        }
         
     </style>
 </head>
@@ -483,9 +433,9 @@
     </div>
 
     <!-- AUDIO PLAYER -->
-    <!-- REPLACE 'src' with your actual audio file URL -->
-    <audio id="hover-audio" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    <audio id="profile-audio" loop preload="auto">
+        <!-- REPLACE THE SRC BELOW WITH YOUR OWN SONG -->
+        <source src="hukum-128-ytshorts.savetube.me.mp3" type="audio/mpeg">
     </audio>
 
     <!-- 3D Background -->
@@ -518,17 +468,11 @@
     <div id="ui-layer">
         <div class="dashboard-container" id="scroll-container">
             
-            <!-- 1. PROFILE CARD -->
+            <!-- 1. PROFILE CARD (HOME) -->
             <div id="card-profile" class="glass-card">
                 <div class="profile-card-inner">
                     <div class="profile-img-container" id="profile-img-wrapper">
                         <img src="https://lh3.googleusercontent.com/d/1AKmsNEfJ4FpstlFu8YJ-dZkdj3ug5Fkb" class="profile-img" alt="Profile">
-                        
-                        <!-- HIDDEN SECRET BUTTON -->
-                        <!-- REPLACE '#' with your specific link -->
-                        <a href="#" target="_blank" id="secret-btn" title="Secret Link">
-                            <i class="ph-bold ph-link"></i>
-                        </a>
                     </div>
                     
                     <div class="profile-text-wrapper">
@@ -737,97 +681,1099 @@
             setTimeout(() => themeBtn.style.transform = "scale(1)", 100);
         });
 
-        // --- AUDIO FADE LOGIC ---
-        const bgMusic = document.getElementById('hover-audio');
-        let fadeInterval;
-
-        function fadeInAudio() {
-            clearInterval(fadeInterval);
-            bgMusic.volume = 0;
-            // Attempt to play (browser may block if no interaction occurred yet)
-            const playPromise = bgMusic.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Playback started, begin fade in
-                    fadeInterval = setInterval(() => {
-                        if (bgMusic.volume < 1.0) {
-                            bgMusic.volume = Math.min(1.0, bgMusic.volume + 0.05);
-                        } else {
-                            clearInterval(fadeInterval);
-                        }
-                    }, 100); // Step every 100ms
-                }).catch(error => {
-                    console.log("Audio play blocked (user needs to interact with page first):", error);
-                });
-            }
-        }
-
-        function fadeOutAudio() {
-            clearInterval(fadeInterval);
-            fadeInterval = setInterval(() => {
-                if (bgMusic.volume > 0.0) {
-                    bgMusic.volume = Math.max(0.0, bgMusic.volume - 0.05);
-                } else {
-                    clearInterval(fadeInterval);
-                    bgMusic.pause();
-                    bgMusic.currentTime = 0; // Reset
-                }
-            }, 100);
-        }
-
-
-        // --- GOLD MODE & SECRET BUTTON HOVER LOGIC ---
+        // --- GOLD MODE & AUDIO HOVER (Profile Pic) ---
         const profileImgWrapper = document.getElementById('profile-img-wrapper');
-        const secretBtn = document.getElementById('secret-btn');
+        const audio = document.getElementById('profile-audio');
         let isProfileHovered = false; // Flag for animation loop
-        let secretHoverTimer; // Timer for showing hidden button
-        let secretHideTimer;  // Timer for hiding button (grace period)
 
         profileImgWrapper.addEventListener('mouseenter', () => {
-            // Cancel any pending hide action so button stays if user comes back quickly
-            clearTimeout(secretHideTimer);
-
-            // Gold Mode trigger
+            // Visuals
             applyGoldMode(true);
             isProfileHovered = true;
 
-            // Start Audio
-            fadeInAudio();
-
-            // Start 15-second timer for secret button ONLY if not already visible
-            if (!secretBtn.classList.contains('visible')) {
-                secretHoverTimer = setTimeout(() => {
-                    secretBtn.classList.add('visible');
-                }, 15000); // 15 seconds wait to appear
+            // Audio Logic
+            if(audio) {
+                // Set start time to 20 seconds as requested
+                audio.currentTime = 20;
+                audio.volume = 0;
+                // Normal speed
+                audio.playbackRate = 1.0; 
+                
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        // Fade in volume over 2 seconds
+                        // 2000ms duration / 50ms interval = 40 steps
+                        // 1.0 max volume / 40 steps = 0.025 increment per step
+                        let vol = 0;
+                        
+                        // Clear any existing fade interval
+                        if(audio.dataset.fadeInterval) clearInterval(Number(audio.dataset.fadeInterval));
+                        
+                        const fadeInterval = setInterval(() => {
+                            if (vol < 1.0) {
+                                vol += 0.025; // Slower increment for 2s fade
+                                audio.volume = Math.min(vol, 1.0);
+                            } else {
+                                clearInterval(fadeInterval);
+                            }
+                        }, 50);
+                        audio.dataset.fadeInterval = fadeInterval;
+                    })
+                    .catch(error => {
+                        console.log("Audio play prevented by browser policy (needs interaction first).");
+                    });
+                }
             }
         });
         
         profileImgWrapper.addEventListener('mouseleave', () => {
-            // Reset visual effects
+            // Visuals
             applyGoldMode(false);
             isProfileHovered = false;
 
-            // Stop Audio
-            fadeOutAudio();
+            // Audio Logic
+            if(audio) {
+                // Clear fade in if still running
+                if(audio.dataset.fadeInterval) clearInterval(Number(audio.dataset.fadeInterval));
+                
+                // Stop immediately
+                audio.pause();
+                // Resetting to 20 isn't strictly necessary here since we set it on enter, 
+                // but good for consistency.
+                audio.currentTime = 20; 
+            }
+        });
+
+
+        // --- STAGE LOGIC (DESKTOP) & SCROLL LOGIC (MOBILE) ---
+        let currentStage = 0;
+        const totalStages = 3;
+        let isScrolling = false;
+        
+        const dots = [
+            document.getElementById('dot-0'),
+            document.getElementById('dot-1'),
+            document.getElementById('dot-2'),
+            document.getElementById('dot-3')
+        ];
+
+        function updateStage(newStage) {
+            currentStage = newStage;
+            // Only apply data attribute if desktop logic applies
+            document.body.setAttribute('data-stage', currentStage);
             
-            // Cancel the show timer (if user left before 15s)
-            clearTimeout(secretHoverTimer);
+            dots.forEach((d, i) => {
+                if(i === currentStage) d.classList.add('active');
+                else d.classList.remove('active');
+            });
+        }
+
+        // --- DESKTOP WHEEL HANDLER ---
+        let scrollTimeout;
+        window.addEventListener('wheel', (e) => {
+            // Disable this logic on mobile
+            if (window.innerWidth < 768) return;
+
+            if(isScrolling) return;
+            if(Math.abs(e.deltaY) > 25) {
+                isScrolling = true;
+                if(e.deltaY > 0) {
+                    if(currentStage < totalStages) updateStage(currentStage + 1);
+                } else {
+                    if(currentStage > 0) updateStage(currentStage - 1);
+                }
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => isScrolling = false, 1000);
+            }
+        });
+
+        // --- MOBILE HORIZONTAL SCROLL LISTENER ---
+        const scrollContainer = document.getElementById('scroll-container');
+        scrollContainer.addEventListener('scroll', () => {
+            if (window.innerWidth >= 768) return;
+
+            const scrollLeft = scrollContainer.scrollLeft;
+            const width = window.innerWidth;
+            const index = Math.round(scrollLeft / width);
             
-            // If button is currently visible, give it a 3s grace period before hiding
-            if (secretBtn.classList.contains('visible')) {
-                secretHideTimer = setTimeout(() => {
-                    secretBtn.classList.remove('visible');
-                }, 3000); // 3 seconds visibility after leaving
+            if (index !== currentStage) {
+                currentStage = index;
+                // Update dots visually
+                dots.forEach((d, i) => {
+                    if(i === currentStage) d.classList.add('active');
+                    else d.classList.remove('active');
+                });
+            }
+        });
+
+
+        // --- THREE.JS BACKGROUND ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xF3F4F6);
+
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 8;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+        const intersectPoint = new THREE.Vector3();
+
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = new Float32Array(particleCount * 3);
+        const interactionVelocities = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 20;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+            velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+            velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+            
+            interactionVelocities[i*3] = 0;
+            interactionVelocities[i*3+1] = 0;
+            interactionVelocities[i*3+2] = 0;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x64748b,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        const lineGeometry = new THREE.BufferGeometry();
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x3B82F6,
+            transparent: true,
+            opacity: 0.1
+        });
+        const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(lines);
+
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', e => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Determine Physics Mode
+            if (isProfileHovered && currentStage === 0) {
+                // VORTEX MODE (Circle Formation)
+                const positions = particleSystem.geometry.attributes.position.array;
+                
+                // Adjust radius based on screen size (smaller for mobile)
+                const isMobile = window.innerWidth < 768;
+                const baseRadius = isMobile ? 3.5 : 5.0; 
+                
+                const speed = 0.2; // Faster rotation (was 0.06)
+
+                for (let i = 0; i < particleCount; i++) {
+                    const x = positions[i*3];
+                    const y = positions[i*3+1];
+                    const z = positions[i*3+2];
+
+                    if (i % 4 === 0) { // 25% of particles
+                        // Current radius in 2D
+                        const r = Math.sqrt(x*x + y*y);
+                        const angle = Math.atan2(y, x) + speed; // Rotate
+
+                        // Target position (Ring) - Add some variance
+                        // Mobile: Higher variance for more scatter
+                        const variance = (i % (isMobile ? 7 : 5)) * (isMobile ? 0.8 : 0.6); 
+                        const targetRadius = baseRadius + variance;
+
+                        const tx = Math.cos(angle) * targetRadius;
+                        const ty = Math.sin(angle) * targetRadius;
+                        const tz = z * 0.90; // Flatten Z
+
+                        // Lerp towards target
+                        positions[i*3] += (tx - x) * 0.08; 
+                        positions[i*3+1] += (ty - y) * 0.08;
+                        positions[i*3+2] += (tz - z) * 0.08;
+                    } else {
+                        // Float freely
+                        let vx = velocities[i * 3];
+                        let vy = velocities[i * 3 + 1];
+                        let vz = velocities[i * 3 + 2];
+                        
+                        positions[i * 3] += vx;
+                        positions[i * 3 + 1] += vy;
+                        positions[i * 3 + 2] += vz;
+
+                        if (Math.abs(positions[i * 3]) > 10) velocities[i * 3] *= -1;
+                        if (Math.abs(positions[i * 3 + 1]) > 5) velocities[i * 3 + 1] *= -1;
+                        if (Math.abs(positions[i * 3 + 2]) > 10) velocities[i * 3 + 2] *= -1;
+                    }
+                }
+                particleSystem.geometry.attributes.position.needsUpdate = true;
+                
+                // Update lines to match
+                const linePositions = [];
+                for (let i = 0; i < particleCount; i++) {
+                    for (let j = i + 1; j < particleCount; j++) {
+                        const dx = positions[i * 3] - positions[j * 3];
+                        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+                        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+                        const distSq = dx * dx + dy * dy + dz * dz;
+                        if (distSq < 2.5) {
+                            linePositions.push(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+                            linePositions.push(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]);
+                        }
+                    }
+                }
+                lines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+
             } else {
-                // If not visible, ensure it stays hidden
-                secretBtn.classList.remove('visible');
+                // NORMAL FLOAT MODE
+                raycaster.setFromCamera(mouse, camera);
+                raycaster.ray.intersectPlane(plane, intersectPoint);
+
+                const positions = particleSystem.geometry.attributes.position.array;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    let vx = velocities[i * 3];
+                    let vy = velocities[i * 3 + 1];
+                    let vz = velocities[i * 3 + 2];
+
+                    if (intersectPoint) {
+                        const dx = positions[i * 3] - intersectPoint.x;
+                        const dy = positions[i * 3 + 1] - intersectPoint.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if (dist < 3.0) {
+                            const force = (3.0 - dist) * 0.002;
+                            interactionVelocities[i * 3] += dx * force;
+                            interactionVelocities[i * 3 + 1] += dy * force;
+                        }
+                    }
+
+                    interactionVelocities[i * 3] *= 0.95;
+                    interactionVelocities[i * 3 + 1] *= 0.95;
+                    interactionVelocities[i * 3 + 2] *= 0.95;
+
+                    positions[i * 3] += vx + interactionVelocities[i * 3];
+                    positions[i * 3 + 1] += vy + interactionVelocities[i * 3 + 1];
+                    positions[i * 3 + 2] += vz + interactionVelocities[i * 3 + 2];
+
+                    if (Math.abs(positions[i * 3]) > 10) velocities[i * 3] *= -1;
+                    if (Math.abs(positions[i * 3 + 1]) > 5) velocities[i * 3 + 1] *= -1;
+                    if (Math.abs(positions[i * 3 + 2]) > 10) velocities[i * 3 + 2] *= -1;
+                }
+                particleSystem.geometry.attributes.position.needsUpdate = true;
+
+                // Update lines (Standard)
+                const linePositions = [];
+                for (let i = 0; i < particleCount; i++) {
+                    for (let j = i + 1; j < particleCount; j++) {
+                        const dx = positions[i * 3] - positions[j * 3];
+                        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+                        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+                        const distSq = dx * dx + dy * dy + dz * dz;
+
+                        if (distSq < 2.5) {
+                            linePositions.push(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+                            linePositions.push(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]);
+                        }
+                    }
+                }
+                lines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+            }
+
+            // Global rotation
+            particleSystem.rotation.y += (mouseX * 0.05 - particleSystem.rotation.y) * 0.05;
+            particleSystem.rotation.x += (mouseY * 0.05 - particleSystem.rotation.x) * 0.05;
+            lines.rotation.copy(particleSystem.rotation);
+
+            const targetZ = 8 + (currentStage * 0.5);
+            camera.position.z += (targetZ - camera.position.z) * 0.05;
+            renderer.render(scene, camera);
+        }
+
+        window.onload = () => {
+            animate();
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
+            }, 800);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Goud Lucky | Morphing Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #F3F4F6;
+            --text-main: #111;
+            --text-sub: #4B5563;
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --card-border: rgba(255, 255, 255, 0.8);
+            --card-shadow: rgba(0, 0, 0, 0.05);
+            --accent-primary: #2563EB;
+        }
+
+        /* DARK MODE VARS */
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --text-main: #F8FAFC;
+            --text-sub: #94A3B8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-shadow: rgba(0, 0, 0, 0.3);
+            --accent-primary: #38BDF8;
+        }
+
+        /* GOLD MODE OVERRIDES */
+        body.gold-mode {
+            --bg-color: #0c0a00 !important;
+            --text-main: #FFD700 !important;
+            --text-sub: #d4c59a !important;
+            --card-bg: rgba(20, 18, 10, 0.85) !important;
+            --card-border: rgba(255, 215, 0, 0.4) !important;
+            --card-shadow: rgba(255, 215, 0, 0.15) !important;
+            --accent-primary: #FFD700 !important;
+        }
+
+        body { 
+            margin: 0; overflow: hidden; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            font-family: 'Space Grotesk', sans-serif;
+            transition: background-color 0.8s ease, color 0.5s ease;
+        }
+        
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        
+        #ui-layer { 
+            position: relative; 
+            z-index: 10; 
+            height: 100vh; 
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .dashboard-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            height: 85vh;
+        }
+
+        /* GLASS CARD BASE */
+        .glass-card {
+            position: absolute;
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            box-shadow: 0 10px 40px var(--card-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: 
+                top 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                left 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                width 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                height 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.6s ease,
+                background-color 0.5s ease,
+                border-color 0.5s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        /* --- DESKTOP STAGE CONFIGURATIONS (> 768px) --- */
+        @media (min-width: 768px) {
+            /* STAGE 0 */
+            body[data-stage="0"] #card-profile { top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent; backdrop-filter: none; border-color: transparent; box-shadow: none; transition-delay: 0s; }
+            body[data-stage="0"] #card-expertise { top: 0; left: 100%; width: 38%; height: 100%; opacity: 0; pointer-events: none; transition-delay: 0s; }
+            body[data-stage="0"] #card-research { top: 100%; left: 0; width: 100%; height: 48%; opacity: 0; pointer-events: none; transition-delay: 0s; }
+            body[data-stage="0"] #card-connect { top: 100%; left: 62%; width: 38%; height: 48%; opacity: 0; pointer-events: none; transition-delay: 0s; }
+
+            /* STAGE 1 */
+            body[data-stage="1"] #card-profile { top: 0; left: 0; width: calc(60% - 0.75rem); height: 100%; }
+            body[data-stage="1"] #card-expertise { 
+                top: 0; left: calc(60% + 0.75rem); width: calc(40% - 0.75rem); height: 100%; 
+                opacity: 1; pointer-events: auto; 
+                transition-delay: 0.4s; 
+            }
+            body[data-stage="1"] #card-research { top: 100%; left: 0; opacity: 0; }
+            body[data-stage="1"] #card-connect { top: 100%; left: calc(60% + 0.75rem); opacity: 0; }
+            
+            /* STAGE 2 */
+            body[data-stage="2"] #card-profile { top: 0; left: 0; width: calc(60% - 0.75rem); height: calc(50% - 0.75rem); }
+            body[data-stage="2"] #card-expertise { top: 0; left: calc(60% + 0.75rem); width: calc(40% - 0.75rem); height: calc(50% - 0.75rem); opacity: 1; transition-delay: 0s; }
+            body[data-stage="2"] #card-research { 
+                top: calc(50% + 0.75rem); left: 0; width: 100%; height: calc(50% - 0.75rem); 
+                opacity: 1; pointer-events: auto; 
+                transition-delay: 0.4s;
+            }
+            body[data-stage="2"] #card-connect { top: calc(50% + 0.75rem); left: 100%; opacity: 0; }
+            
+            /* STAGE 3 */
+            body[data-stage="3"] #card-profile { top: 0; left: 0; width: calc(60% - 0.75rem); height: calc(50% - 0.75rem); }
+            body[data-stage="3"] #card-expertise { top: 0; left: calc(60% + 0.75rem); width: calc(40% - 0.75rem); height: calc(50% - 0.75rem); opacity: 1; }
+            body[data-stage="3"] #card-research { top: calc(50% + 0.75rem); left: 0; width: calc(60% - 0.75rem); height: calc(50% - 0.75rem); }
+            body[data-stage="3"] #card-connect { 
+                top: calc(50% + 0.75rem); left: calc(60% + 0.75rem); width: calc(40% - 0.75rem); height: calc(50% - 0.75rem); 
+                opacity: 1; pointer-events: auto; 
+                transition-delay: 0.4s;
+            }
+        }
+
+        /* --- MOBILE SLIDER LAYOUT (< 768px) --- */
+        @media (max-width: 767px) {
+            #ui-layer {
+                padding: 0;
+                align-items: flex-start;
+            }
+
+            .dashboard-container {
+                /* Transform into horizontal slider */
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-snap-type: x mandatory;
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                position: fixed;
+                top: 0; left: 0;
+                scrollbar-width: none;
+            }
+            .dashboard-container::-webkit-scrollbar { display: none; }
+
+            .glass-card {
+                /* Reset absolute positioning */
+                position: relative !important;
+                min-width: 100vw;
+                height: 100vh;
+                top: auto !important;
+                left: auto !important;
+                width: 100vw !important;
+                scroll-snap-align: start;
+                
+                /* Visual reset */
+                background: transparent !important;
+                backdrop-filter: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                transform: none !important;
+                
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Inner content card for mobile legibility */
+            .info-card-content {
+                width: 85% !important;
+                height: auto;
+                max-height: 75vh;
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 24px;
+                padding: 1.5rem !important; /* Mobile padding */
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                margin-top: 4rem; /* Spacing from header */
+                overflow-y: auto;
+            }
+
+            /* Dark/Gold mode inner card adaptation */
+            body.dark-mode .info-card-content {
+                background: rgba(15, 23, 42, 0.75);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            body.gold-mode .info-card-content {
+                background: rgba(20, 18, 10, 0.85);
+                border-color: rgba(255, 215, 0, 0.3);
+            }
+
+            /* Specific Adjustments for Home/Profile slide */
+            #card-profile .profile-card-inner {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding-top: 2rem;
+            }
+            /* Make Profile card transparent (no box) as requested */
+            #card-profile .info-card-content,
+            #card-profile {
+                background: transparent !important;
+                backdrop-filter: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                overflow: visible;
+            }
+
+            /* Re-style profile elements for mobile */
+            .profile-img { 
+                width: 200px !important; 
+                height: 200px !important; 
+                margin-bottom: 1rem;
+                border-radius: 50%;
+                /* Remove mask from desktop stage 0 if present */
+                -webkit-mask-image: none !important;
+                mask-image: none !important;
+                border: 4px solid var(--bg-color) !important;
+            }
+            
+            /* Gold mode border removal */
+            body.gold-mode .profile-img { border: none !important; }
+
+            .profile-text-wrapper {
+                margin-top: 1rem !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            
+            .hero-title { font-size: 2.5rem !important; }
+            .hero-subtitle { font-size: 1rem !important; margin-bottom: 0.5rem; }
+            .hero-desc { 
+                font-size: 1rem !important; 
+                opacity: 1 !important; 
+                transform: none !important; 
+                position: relative !important;
+                pointer-events: auto !important;
+                margin-top: 0.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .mini-contact {
+                opacity: 1 !important;
+                transform: none !important;
+                justify-content: center;
+            }
+        }
+
+
+        /* --- INTERNAL CONTENT STYLING --- */
+        
+        .profile-img-container { flex-shrink: 0; transition: all 1.2s ease; cursor: pointer; position: relative; z-index: 5; }
+        .profile-img {
+            width: 220px; height: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            object-fit: cover;
+            transition: width 1.2s ease, height 1.2s ease, box-shadow 0.3s ease;
+        }
+        
+        body.gold-mode .profile-img {
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.6) !important;
+        }
+        
+        /* Desktop specific sizing logic */
+        @media (min-width: 768px) {
+            body:not([data-stage="0"]) .profile-img { width: 140px; height: 140px; border-width: 4px; border-radius: 50%; border: 4px solid var(--bg-color); }
+            body[data-stage="0"] .profile-img {
+                width: 280px; 
+                border-radius: 0; 
+                border: none;
+                -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+                mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            }
+            body:not([data-stage="0"]) .profile-text-wrapper { align-items: flex-start; margin-top: 0; }
+            body[data-stage="0"] .profile-text-wrapper { align-items: center; text-align: center; margin-top: -70px; }
+            
+            h1.hero-title { font-size: 5rem; font-weight: 800; line-height: 1; letter-spacing: -0.05em; margin-bottom: 0.5rem; }
+            body:not([data-stage="0"]) h1.hero-title { font-size: 2.5rem; text-shadow: none; }
+            
+            p.hero-subtitle { font-size: 1.25rem; color: var(--accent-primary); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+            body:not([data-stage="0"]) p.hero-subtitle { font-size: 0.9rem; }
+            
+            .hero-desc { font-size: 1.5rem; color: var(--text-sub); font-weight: 300; max-width: 800px; margin-top: 2rem; opacity: 1; transform: translateY(0); white-space: normal; }
+            body:not([data-stage="0"]) .hero-desc { opacity: 0; transform: translateY(20px); pointer-events: none; position: absolute; }
+        }
+
+        .profile-text-wrapper {
+            display: flex; flex-direction: column; justify-content: center;
+            transition: all 1.2s ease;
+            white-space: nowrap; 
+            flex-shrink: 0;
+            min-width: 350px; 
+            position: relative;
+            z-index: 10;
+        }
+
+        h1.hero-title { color: var(--text-main); transition: all 1.2s ease; }
+        p.hero-subtitle { transition: all 1.2s ease; }
+        .hero-desc { transition: opacity 0.5s ease, transform 0.5s ease; }
+
+        /* THEME BUTTON */
+        #theme-btn {
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        body.dark-mode #theme-btn {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        body.gold-mode #theme-btn {
+            background: rgba(20, 18, 10, 0.85);
+            border-color: #FFD700;
+            color: #FFD700;
+        }
+        #theme-btn:hover { transform: scale(1.05); }
+
+        .mini-contact {
+            opacity: 0; transform: translateY(20px); transition: all 0.8s ease 0.4s;
+            margin-top: 1rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+        }
+        @media (min-width: 768px) {
+            body:not([data-stage="0"]) .mini-contact { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-card-inner { display: flex; width: 100%; height: 100%; transition: all 1.2s ease; overflow: hidden; }
+        @media (min-width: 768px) {
+            body[data-stage="0"] .profile-card-inner { flex-direction: column; justify-content: center; align-items: center; gap: 0; transform: translateY(-8%); }
+            body:not([data-stage="0"]) .profile-card-inner { flex-direction: row; justify-content: center; align-items: center; gap: 2rem; padding: 0 2rem; transform: translateY(0); }
+        }
+
+        .project-card {
+            flex: 1;
+            /* Allow flex to shrink if needed, remove min-width on desktop to prevent distorion */
+            min-width: 240px; 
+            flex-shrink: 1;
+            transition: all 0.3s ease;
+        }
+        
+        /* Mobile project card tweak */
+        @media (max-width: 767px) {
+            .project-card { min-width: 0; min-height: 200px; margin-bottom: 1rem; }
+        }
+
+        .skill-fill { width: 0%; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        body:not([data-stage="0"]) .skill-fill-1 { width: 95%; transition-delay: 0.2s; }
+        body:not([data-stage="0"]) .skill-fill-2 { width: 88%; transition-delay: 0.4s; }
+        body:not([data-stage="0"]) .skill-fill-3 { width: 92%; transition-delay: 0.6s; }
+        
+        /* Force skill fill on mobile since stage logic is bypassed */
+        @media (max-width: 767px) {
+            .skill-fill-1 { width: 95% !important; }
+            .skill-fill-2 { width: 88% !important; }
+            .skill-fill-3 { width: 92% !important; }
+        }
+
+        .progress-bar {
+            position: fixed; right: 2rem; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 12px; z-index: 100;
+        }
+        /* Keep progress bar on mobile but move it to bottom */
+        @media (max-width: 767px) { 
+            .progress-bar { 
+                flex-direction: row; 
+                top: auto; 
+                bottom: 2rem; 
+                left: 50%; 
+                right: auto;
+                transform: translateX(-50%);
+            } 
+        }
+        
+        .dot { width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%; transition: all 0.4s ease; }
+        .dot.active { background: var(--accent-primary); transform: scale(1.5); box-shadow: 0 0 15px var(--accent-primary); }
+
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 200; display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease-out;
+        }
+        
+        /* Dark Mode Text Colors Override */
+        body.dark-mode .text-gray-900 { color: #F8FAFC; }
+        body.dark-mode .text-gray-500, body.dark-mode .text-gray-400 { color: #94A3B8; }
+        body.dark-mode .bg-gray-100 { background-color: rgba(255,255,255,0.1); color: #fff; }
+        body.dark-mode .bg-white\/50 { background-color: rgba(30,41,59,0.5); border-color: rgba(255,255,255,0.1); }
+        body.dark-mode .hover\:bg-black:hover { background-color: #38BDF8; color: black; }
+        
+        /* GOLD MODE OVERRIDES */
+        body.gold-mode .text-gray-900 { color: #FFD700 !important; }
+        body.gold-mode .text-gray-500, body.gold-mode .text-gray-400 { color: #d4c59a !important; }
+        body.gold-mode .bg-gray-100 { background-color: rgba(255, 215, 0, 0.15) !important; color: #FFD700 !important; }
+        body.gold-mode .bg-white\/50 { background-color: rgba(20, 18, 10, 0.7) !important; border-color: rgba(255, 215, 0, 0.3) !important; }
+        body.gold-mode .profile-img { border: none !important; }
+
+        /* GLOBAL INFO CARD CONTENT */
+        .info-card-content {
+            display: flex; flex-direction: column; height: 100%;
+            width: 100%;
+            /* RESTORED DEFAULT PADDING FOR DESKTOP */
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        
+    </style>
+</head>
+<body data-stage="0">
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="text-sm font-bold tracking-[0.3em] text-gray-400 animate-pulse">SYSTEM CHECK</div>
+    </div>
+
+    <!-- AUDIO PLAYER -->
+    <audio id="profile-audio" loop preload="auto">
+        <!-- REPLACE THE SRC BELOW WITH YOUR OWN SONG -->
+        <source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Header -->
+    <nav class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50 pointer-events-none text-gray-900">
+        <div class="pointer-events-auto flex flex-col">
+            <span class="font-bold text-2xl tracking-tighter">Goud Lucky.</span>
+            <span class="text-[10px] text-gray-400 font-mono tracking-widest">v2.5.0 STABLE</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="hidden md:flex flex-col items-end mr-4">
+                <span class="text-[10px] font-bold text-gray-400 tracking-widest flex items-center gap-1">
+                    <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div> SYSTEM OPTIMAL
+                </span>
+                <span class="text-xs font-mono text-gray-500" id="utc-time">00:00:00 UTC</span>
+            </div>
+
+            <!-- THEME BUTTON -->
+            <button id="theme-btn" class="pointer-events-auto px-4 py-2 rounded-full border text-xs font-bold text-gray-500 shadow-sm flex items-center gap-2 group">
+                <i id="theme-icon" class="ph-bold ph-moon text-lg"></i> 
+                <span class="hidden md:inline" id="theme-text">DARK MODE</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <div class="dashboard-container" id="scroll-container">
+            
+            <!-- 1. PROFILE CARD (HOME) -->
+            <div id="card-profile" class="glass-card">
+                <div class="profile-card-inner">
+                    <div class="profile-img-container" id="profile-img-wrapper">
+                        <img src="https://lh3.googleusercontent.com/d/1AKmsNEfJ4FpstlFu8YJ-dZkdj3ug5Fkb" class="profile-img" alt="Profile">
+                    </div>
+                    
+                    <div class="profile-text-wrapper">
+                        <h1 class="hero-title">Data Scientist</h1>
+                        <p class="hero-subtitle">Machine Learning Engineer</p>
+                        
+                        <p class="hero-desc">
+                            Converting raw data into strategic foresight.<br>
+                            Specializing in Predictive Analytics & Scalable AI.
+                        </p>
+
+                        <div class="mini-contact">
+                            <button class="bg-gray-100 hover:bg-black hover:text-white transition-colors w-12 h-12  p-2 rounded-lg text-xl" title="Github"><i class="ph-fill ph-github-logo"></i></button>
+                            <button class="bg-gray-100 hover:bg-blue-600 hover:text-white transition-colors w-12 h-12 p-2 rounded-lg text-xl" title="LinkedIn"><i class="ph-fill ph-linkedin-logo"></i></button>
+                            <button class="bg-gray-100 hover:bg-red-500 hover:text-white transition-colors w-12 h-12 p-2 rounded-lg text-xl" title="View PDF"><i class="ph-fill ph-file-pdf"></i></button>
+                            <button class="bg-gray-900 text-white px-4 py-2 rounded-lg font-bold text-xs hover:bg-blue-600 transition-colors h-12 shadow-md flex items-center gap-2" title="Download Resume">
+                                <i class="ph-bold ph-download-simple"></i> RESUME
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. EXPERTISE CARD -->
+            <div id="card-expertise" class="glass-card">
+                <div class="info-card-content">
+                    <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-4 flex-shrink-0">
+                        <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">Toolkit</span>
+                        <i class="ph-fill ph-wrench text-gray-400 text-xl"></i>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center gap-6 overflow-hidden">
+                        
+                        <div class="group">
+                            <div class="flex justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-fill ph-brain text-xl text-blue-600"></i>
+                                    <h3 class="font-bold text-sm text-gray-900">Neural Networks</h3>
+                                </div>
+                                <span class="text-xs font-mono text-gray-400">95%</span>
+                            </div>
+                            <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-600 rounded-full skill-fill skill-fill-1"></div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-1 pl-1">PyTorch, TensorFlow, Transformers</p>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-fill ph-chart-line-up text-xl text-purple-600"></i>
+                                    <h3 class="font-bold text-sm text-gray-900">Analytics</h3>
+                                </div>
+                                <span class="text-xs font-mono text-gray-400">88%</span>
+                            </div>
+                            <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-600 rounded-full skill-fill skill-fill-2"></div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-1 pl-1">Tableau, D3.js, PowerBI</p>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-fill ph-cloud-check text-xl text-orange-600"></i>
+                                    <h3 class="font-bold text-sm text-gray-900">MLOps</h3>
+                                </div>
+                                <span class="text-xs font-mono text-gray-400">92%</span>
+                            </div>
+                            <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-orange-600 rounded-full skill-fill skill-fill-3"></div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-1 pl-1">AWS SageMaker, Docker, K8s</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. RESEARCH CARD -->
+            <div id="card-research" class="glass-card">
+                <div class="info-card-content">
+                    <div class="flex justify-between items-center mb-6 flex-shrink-0">
+                        <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">Research</span>
+                        <button class="text-xs font-bold text-blue-600 hover:bg-blue-50 px-2 py-1 rounded">GITHUB &rarr;</button>
+                    </div>
+                    <div class="flex-1 flex gap-4 h-full overflow-hidden flex-col md:flex-row">
+                        <div class="project-card bg-white/50 rounded-2xl p-6 hover:bg-white transition-all cursor-pointer group border border-transparent hover:border-blue-200 flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="ph-bold ph-trend-up"></i>
+                                </div>
+                                <h4 class="font-bold text-lg leading-tight mb-2 text-gray-900">Market Volatility</h4>
+                                <p class="text-xs text-gray-500">Temporal fusion transformer predicting indices with 94% accuracy.</p>
+                            </div>
+                            <div class="text-[10px] font-bold text-gray-400 uppercase mt-4">Python • PyTorch</div>
+                        </div>
+                        <div class="project-card bg-white/50 rounded-2xl p-6 hover:bg-white transition-all cursor-pointer group border border-transparent hover:border-purple-200 flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="ph-bold ph-chat-text"></i>
+                                </div>
+                                <h4 class="font-bold text-lg leading-tight mb-2 text-gray-900">Legal AI</h4>
+                                <p class="text-xs text-gray-500">Fine-tuned LLaMA-2 model for contract analysis.</p>
+                            </div>
+                            <div class="text-[10px] font-bold text-gray-400 uppercase mt-4">LLM • LangChain</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. CONTACT CARD -->
+            <div id="card-connect" class="glass-card">
+                <div class="info-card-content flex flex-col justify-center items-center text-center bg-gray-900 text-white relative overflow-hidden" style="background: #111 !important;">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-800 to-black opacity-50 z-0"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-2xl mb-4 mx-auto border border-white/20">
+                            <i class="ph-fill ph-hand-waving animate-pulse"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Let's Collaborate</h3>
+                        <p class="text-gray-400 text-xs mb-6 max-w-xs mx-auto">Available for AI safety research and consulting opportunities.</p>
+                        <button class="bg-white text-black px-8 py-3 rounded-full font-bold text-xs hover:bg-blue-500 hover:text-white transition-all w-full shadow-lg transform hover:-translate-y-1">
+                            SEND EMAIL
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="progress-bar">
+        <div class="dot active" id="dot-0"></div>
+        <div class="dot" id="dot-1"></div>
+        <div class="dot" id="dot-2"></div>
+        <div class="dot" id="dot-3"></div>
+    </div>
+
+    <script>
+        // --- LIVE CLOCK ---
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
+            const el = document.getElementById('utc-time');
+            if(el) el.innerText = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // --- THEME LOGIC ---
+        const themeBtn = document.getElementById('theme-btn');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        
+        let currentMode = 'light';
+        
+        function applyTheme(mode) {
+            document.body.classList.remove('gold-mode'); // Reset Gold
+
+            if(mode === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.classList.replace('ph-moon', 'ph-sun');
+                themeText.innerText = "LIGHT MODE";
+                
+                scene.background = new THREE.Color(0x0f172a);
+                if(particleSystem) particleSystem.material.color.setHex(0x38BDF8);
+                if(lines) lines.material.color.setHex(0x38BDF8);
+                if(lines) lines.material.opacity = 0.2;
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeIcon.classList.replace('ph-sun', 'ph-moon');
+                themeText.innerText = "DARK MODE";
+                
+                scene.background = new THREE.Color(0xF3F4F6);
+                if(particleSystem) particleSystem.material.color.setHex(0x64748b);
+                if(lines) lines.material.color.setHex(0x3B82F6);
+            }
+        }
+
+        function applyGoldMode(enable) {
+            if(enable) {
+                document.body.classList.add('gold-mode');
+                scene.background = new THREE.Color(0x0c0a00); // Deep Black
+                if(particleSystem) particleSystem.material.color.setHex(0xFFD700); // Gold
+                if(lines) lines.material.color.setHex(0xFFD700);
+                if(lines) lines.material.opacity = 0.4;
+            } else {
+                document.body.classList.remove('gold-mode');
+                applyTheme(currentMode); 
+            }
+        }
+
+        themeBtn.addEventListener('mouseenter', () => {
+            const previewMode = currentMode === 'light' ? 'dark' : 'light';
+            applyTheme(previewMode);
+        });
+
+        themeBtn.addEventListener('mouseleave', () => {
+            applyTheme(currentMode);
+        });
+
+        themeBtn.addEventListener('click', () => {
+            currentMode = currentMode === 'light' ? 'dark' : 'light';
+            applyTheme(currentMode);
+            themeBtn.style.transform = "scale(0.95)";
+            setTimeout(() => themeBtn.style.transform = "scale(1)", 100);
+        });
+
+        // --- GOLD MODE & AUDIO HOVER (Profile Pic) ---
+        const profileImgWrapper = document.getElementById('profile-img-wrapper');
+        const audio = document.getElementById('profile-audio');
+        let isProfileHovered = false; // Flag for animation loop
+
+        profileImgWrapper.addEventListener('mouseenter', () => {
+            // Visuals
+            applyGoldMode(true);
+            isProfileHovered = true;
+
+            // Audio Logic
+            if(audio) {
+                // Set start time to 20 seconds as requested
+                audio.currentTime = 20;
+                audio.volume = 0;
+                // Normal speed
+                audio.playbackRate = 1.0; 
+                
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        // Fade in volume over 2 seconds
+                        // 2000ms duration / 50ms interval = 40 steps
+                        // 1.0 max volume / 40 steps = 0.025 increment per step
+                        let vol = 0;
+                        
+                        // Clear any existing fade interval
+                        if(audio.dataset.fadeInterval) clearInterval(Number(audio.dataset.fadeInterval));
+                        
+                        const fadeInterval = setInterval(() => {
+                            if (vol < 1.0) {
+                                vol += 0.025; // Slower increment for 2s fade
+                                audio.volume = Math.min(vol, 1.0);
+                            } else {
+                                clearInterval(fadeInterval);
+                            }
+                        }, 50);
+                        audio.dataset.fadeInterval = fadeInterval;
+                    })
+                    .catch(error => {
+                        console.log("Audio play prevented by browser policy (needs interaction first).");
+                    });
+                }
             }
         });
         
-        // Extra safety: interacting with the button itself keeps it alive
-        secretBtn.addEventListener('mouseenter', () => {
-            clearTimeout(secretHideTimer);
+        profileImgWrapper.addEventListener('mouseleave', () => {
+            // Visuals
+            applyGoldMode(false);
+            isProfileHovered = false;
+
+            // Audio Logic
+            if(audio) {
+                // Clear fade in if still running
+                if(audio.dataset.fadeInterval) clearInterval(Number(audio.dataset.fadeInterval));
+                
+                // Stop immediately
+                audio.pause();
+                // Resetting to 20 isn't strictly necessary here since we set it on enter, 
+                // but good for consistency.
+                audio.currentTime = 20; 
+            }
         });
 
 

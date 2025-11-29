@@ -632,10 +632,10 @@
                         <div class="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-2xl mb-4 mx-auto border border-white/20">
                             <i class="ph-fill ph-hand-waving animate-pulse"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">Let's Collaborate</h3>
-                        <p class="text-gray-400 text-xs mb-6 max-w-xs mx-auto">Available for AI safety research and consulting opportunities.</p>
+                        <h3 class="text-xl font-bold mb-2">Let's Talk Data</h3>
+                        <p class="text-gray-400 text-xs mb-6 max-w-xs mx-auto">Turning numbers into narratives. Open to discussing data strategy, AI implementation, and predictive modeling.</p>
                         <button class="bg-white text-black px-8 py-3 rounded-full font-bold text-xs hover:bg-blue-500 hover:text-white transition-all w-full shadow-lg transform hover:-translate-y-1">
-                            SEND EMAIL
+                            SAY HELLO
                         </button>
                     </div>
                 </div>
@@ -737,8 +737,8 @@
             applyGoldMode(true);
             isProfileHovered = true;
 
-            // Start 15-second timer for secret button ONLY if not already visible
-            if (!secretBtn.classList.contains('visible')) {
+            // Start 15-second timer for secret button ONLY if not already visible AND if on front page (Stage 0)
+            if (currentStage === 0 && !secretBtn.classList.contains('visible')) {
                 secretHoverTimer = setTimeout(() => {
                     secretBtn.classList.add('visible');
                 }, 15000); // 15 seconds wait to appear
@@ -787,6 +787,12 @@
             // Only apply data attribute if desktop logic applies
             document.body.setAttribute('data-stage', currentStage);
             
+            // HIDE SECRET BUTTON IF LEAVING FRONT PAGE
+            if (newStage !== 0) {
+                secretBtn.classList.remove('visible');
+                clearTimeout(secretHoverTimer);
+            }
+
             dots.forEach((d, i) => {
                 if(i === currentStage) d.classList.add('active');
                 else d.classList.remove('active');
@@ -823,6 +829,13 @@
             
             if (index !== currentStage) {
                 currentStage = index;
+                
+                // Ensure secret button hides on mobile scroll too
+                if (currentStage !== 0) {
+                    secretBtn.classList.remove('visible');
+                    clearTimeout(secretHoverTimer);
+                }
+
                 // Update dots visually
                 dots.forEach((d, i) => {
                     if(i === currentStage) d.classList.add('active');
@@ -1052,5 +1065,3 @@
     </script>
 </body>
 </html>
-
-
